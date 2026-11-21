@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: setup emsdk
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: npm install
+        run: npm install
+
+      - name: build wasm
+        run: make web
+
+      - name: run tests
+        run: |
+          make test
+          make test-glue
+
+  deploy:
+    name: build and publish github pages
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: setup emsdk
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: npm install
+        run: npm install
+
+      - name: build wasm
+        run: make web
+
+      - name: build frontend
+        # project pages are served under /<repo>/, so assets need the base
+        run: npm run build -- --base=/${{ github.event.repository.name }}/
+
+      - name: configure pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
