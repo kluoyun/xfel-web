@@ -1,0 +1,43 @@
+{
+	"name": "xfel-web",
+	"private": true,
+	"version": "1.4.0",
+	"description": "Run xfel in the browser over WebUSB (React + shadcn/ui frontend, wasm adapter)",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc --noEmit && vite build",
+		"preview": "vite preview",
+		"check": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@animate-ui/react": "^2.4.0",
+		"@fontsource/jetbrains-mono": "^5.3.0",
+		"@radix-ui/react-label": "^2.1.17",
+		"@radix-ui/react-progress": "^1.2.1",
+		"@radix-ui/react-slot": "^1.5.0",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"cn": "^0.5.2",
+		"lucide-react": "^1.77.0",
+		"motion": "^14.0.0",
+		"radix-ui": "^1.8.1",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"sonner": "^2.0.8",
+		"tailwind-merge": "^3.0.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/vite": "^4.1.0",
+		"@types/react": "^19.0.0",
+		"@types/react-dom": "^19.0.0",
+		"@types/w3c-web-usb": "^1.0.14",
+		"@vitejs/plugin-react": "^6.3.0",
+		"esbuild": "^0.28.2",
+		"tailwindcss": "^4.1.0",
+		"tw-animate-css": "^1.3.0",
+		"typescript": "^7.0.2",
+		"vite": "^8.3.8"
+	}
+}
